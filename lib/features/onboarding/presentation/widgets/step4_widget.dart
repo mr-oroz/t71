@@ -17,7 +17,7 @@ class Step4Widget extends StatelessWidget {
             top: size.height * 0.04,
             child: Image.asset(
               'assets/images/welcome8.png',
-              width: size.width,
+              width: size.width * 1.1,
               fit: BoxFit.fitHeight,
             ),
           ),

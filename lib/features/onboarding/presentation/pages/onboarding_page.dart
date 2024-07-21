@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:t71/core/theme/app_colors.dart';
 import 'package:t71/core/widgets/app_button.dart';
+import 'package:t71/features/create_profile/presentation/pages/create_profile_page.dart';
 import 'package:t71/features/onboarding/presentation/widgets/step1_widget.dart';
 import 'package:t71/features/onboarding/presentation/widgets/step2_widget.dart';
 import 'package:t71/features/onboarding/presentation/widgets/step3_widget.dart';
@@ -53,19 +54,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
               ),
             ],
           ),
-          if(selectedIndex < 3) Positioned(
-            bottom: 120,
-            left: MediaQuery.of(context).size.width * 0.4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widgets.length - 1,
-                (index) => buildDot(
-                  index: index,
+          if (selectedIndex < 3)
+            Positioned(
+              bottom: 120,
+              left: MediaQuery.of(context).size.width * 0.42,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widgets.length - 1,
+                  (index) => buildDot(
+                    index: index,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
       floatingActionButton: Padding(
@@ -75,7 +77,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
             setState(() {
               if (selectedIndex < widgets.length - 1) {
                 _controller.nextPage();
-              } else {}
+              } else {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateProfilePage()),
+                    (Route<dynamic> route) => false);
+              }
             });
           },
           height: 56,
@@ -97,7 +105,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.all(
-          Radius.circular( selectedIndex == index ? 12 : 3),
+          Radius.circular(selectedIndex == index ? 12 : 3),
         ),
       ),
     );

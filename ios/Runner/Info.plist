@@ -41,6 +41,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Explanation why app needs access to the gallery</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Explanation why app needs access to the camera</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

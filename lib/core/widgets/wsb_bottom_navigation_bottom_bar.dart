@@ -29,43 +29,44 @@ class WSBBottomNavigationBar extends StatelessWidget {
       ),
     ];
 
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: AppColors.text2,
-      currentIndex: selectedIndex,
-      onTap: onSelected,
-      items: List.generate(
-        items.length,
-        (index) {
-          final item = items[index];
-          return BottomNavigationBarItem(
-            icon: Center(
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        height: 84,
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        color: AppColors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(items.length, (index) {
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => onSelected(index),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: selectedIndex == index
+                            ? AppColors.blue
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width / 5),
+                      ),
+                      child: AppIcon(
+                        items[index].icon,
+                        color: selectedIndex == index
+                            ? AppColors.white
+                            : AppColors.text2,
+                      ),
+                    ),
+                  ],
                 ),
-                child: AppIcon(item.icon),
               ),
-            ),
-            activeIcon: Center(
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: AppColors.blue,
-                  borderRadius: BorderRadius.circular(
-                      MediaQuery.of(context).size.width / 0.5),
-                ),
-                child: AppIcon(
-                  item.icon,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          );
-        },
+            );
+          }),
+        ),
       ),
     );
   }

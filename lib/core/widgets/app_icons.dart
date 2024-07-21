@@ -23,7 +23,8 @@ enum AppIcons {
   brightness,
   approve,
   account,
-  date
+  date,
+  trash,
 }
 
 class AppIcon extends StatelessWidget {
@@ -46,7 +47,7 @@ class AppIcon extends StatelessWidget {
       height: size,
       width: size,
       child: SvgPicture.asset(
-        'assets/svgs/${icon.name}.svg',
+        'assets/svg/${icon.name}.svg',
         color: changeableColorAccordingToTheme
             ? Theme.of(context).colorScheme.onBackground
             : color,
