@@ -54,6 +54,7 @@ class HistoryTabPage extends HookConsumerWidget {
               state.historyGames.length,
               (index) {
                 return TimeLineWidget(
+                  checkTab: true,
                   selectedInde: 0,
                   item: state.filteredHistory[index],
                   index: index,

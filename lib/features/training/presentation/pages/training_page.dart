@@ -25,7 +25,11 @@ class TrainingPage extends HookConsumerWidget {
             horizontal: 15,
             vertical: 15,
           ),
-          child: TrainingList()
+          child: ListView(
+            children: [
+              TrainingList(),
+            ],
+          )
         ),
       ),
       floatingActionButton: ClipRRect(

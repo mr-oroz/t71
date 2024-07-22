@@ -20,12 +20,14 @@ class TimeLineWidget extends HookConsumerWidget {
     required this.index,
     required this.last,
     required this.item,
+    this.checkTab = false,
     this.onTapIndex,
     this.onLongIndex,
     required this.selectedInde,
   });
 
   final AddGameModel item;
+  final bool checkTab;
   final int last;
   final int index;
   final Function(int index)? onTapIndex;
@@ -51,8 +53,10 @@ class TimeLineWidget extends HookConsumerWidget {
     }
 
     void toggleActive() {
-      _showModalAddCompany(context);
-      onTapIndex?.call(index);
+      if (!checkTab) {
+        onTapIndex?.call(index);
+        _showModalAddCompany(context);
+      }
     }
 
     void toggleLongActive() {
@@ -60,7 +64,9 @@ class TimeLineWidget extends HookConsumerWidget {
     }
 
     Color getIndicatorColor() {
-      if (item.isRedicActive) {
+      if (checkTab) {
+        return AppColors.white;
+      } else if (item.isRedicActive) {
         return AppColors.blue2;
       } else if (selectedInde == index) {
         return AppColors.blue;
@@ -70,7 +76,9 @@ class TimeLineWidget extends HookConsumerWidget {
     }
 
     Color getTextColor() {
-      if (item.isRedicActive) {
+      if (checkTab) {
+        return AppColors.text;
+      } else if (item.isRedicActive) {
         return AppColors.blue;
       } else if (selectedInde == index) {
         return AppColors.white;
@@ -79,11 +87,19 @@ class TimeLineWidget extends HookConsumerWidget {
       }
     }
 
+    Color checkBoxIndicator() {
+      if (checkTab) {
+        return AppColors.blue2;
+      } else if (selectedInde == index) {
+        return AppColors.blue;
+      } else {
+        return AppColors.blue2;
+      }
+    }
+
     return GestureDetector(
-      onTap: () {
-        toggleActive();
-      },
-      onLongPress: toggleLongActive,
+      onTap: toggleActive,
+      onLongPress: checkTab ? () {} : toggleLongActive,
       child: TimelineTile(
         alignment: TimelineAlign.manual,
         lineXY: 0.1,
@@ -94,7 +110,7 @@ class TimeLineWidget extends HookConsumerWidget {
           width: 20,
           indicator: Container(
             decoration: BoxDecoration(
-              color: selectedInde == index ? AppColors.blue : AppColors.white,
+              color: checkBoxIndicator(),
               border: Border.all(
                 color: AppColors.blue,
                 width: 1,
@@ -192,6 +208,15 @@ class TimelineContent extends StatelessWidget {
           Flexible(
             child: Text(
               item.placeOfName ?? '',
+              style: AppFonts.w400f16.copyWith(
+                color: getIndicatorColor,
+              ),
+            ),
+          ),
+          const Gap(10),
+          Flexible(
+            child: Text(
+              item.note ?? '',
               style: AppFonts.w400f16.copyWith(
                 color: getIndicatorColor,
               ),

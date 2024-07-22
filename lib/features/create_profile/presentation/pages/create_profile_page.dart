@@ -141,7 +141,6 @@ class CreateProfilePage extends HookConsumerWidget {
                   controller: favoriteCtrl,
                   hintText: 'Favorite beats',
                   maxLines: 3,
-                  type: TextInputType.number,
                 ),
                 const Gap(15),
                 CustomDropDown(
@@ -160,7 +159,8 @@ class CreateProfilePage extends HookConsumerWidget {
           bgColor: AppColors.blue,
           textColor: AppColors.white,
           onPressed: () {
-            if (formKey.currentState!.validate() && nameCtrl.text.isNotEmpty &&
+            if (formKey.currentState!.validate() &&
+                nameCtrl.text.isNotEmpty &&
                 gameLevel.value != 'Game level' &&
                 favoriteCtrl.text.isNotEmpty &&
                 ageCtrl.text.isNotEmpty &&

@@ -31,6 +31,7 @@ class AddGameDonePage extends HookConsumerWidget {
         placeOfNameCtrl.text = item!.placeOfName ?? '';
         nameOpponentCtrl.text = item!.nameOpponent ?? '';
         noteCtrl.text = item!.note ?? '';
+        locationCtrl.text = item!.city ?? '';
       }
     }, [item]);
 
@@ -121,8 +122,10 @@ class AddGameDonePage extends HookConsumerWidget {
         child: AppButton(
           height: 56,
           onPressed: () {
-            if (_formKey.currentState!.validate() && nameOpponentCtrl.text.isNotEmpty &&
-                placeOfNameCtrl.text.isNotEmpty && locationCtrl.text.isNotEmpty) {
+            if (_formKey.currentState!.validate() &&
+                nameOpponentCtrl.text.isNotEmpty &&
+                placeOfNameCtrl.text.isNotEmpty &&
+                locationCtrl.text.isNotEmpty) {
               if (item != null) {
                 ref.read(addGameProviderProvider.notifier).updateGame(
                       AddGameModel(
@@ -136,6 +139,9 @@ class AddGameDonePage extends HookConsumerWidget {
                         city: locationCtrl.text,
                       ),
                     );
+                ref
+                    .read(addGameProviderProvider.notifier)
+                    .filterGames(gameState.focusedDay!);
               } else {
                 ref.read(addGameProviderProvider.notifier).addGame(
                       AddGameModel(
@@ -148,7 +154,9 @@ class AddGameDonePage extends HookConsumerWidget {
                         city: locationCtrl.text,
                       ),
                     );
-                ref.read(addGameProviderProvider.notifier).filterGames(gameState.focusedDay!);
+                ref
+                    .read(addGameProviderProvider.notifier)
+                    .filterGames(gameState.focusedDay!);
               }
             }
           },

@@ -11,23 +11,26 @@ class TrainingList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(addWorkoutProviderProvider);
-    return state.workouts.isNotEmpty
-        ? ListView(
-            physics: BouncingScrollPhysics(),
-            shrinkWrap: true,
+    if (state.workouts.isNotEmpty) {
+      return Column(
             children: List.generate(state.workouts.length, (index) {
               return CardTraining(
                 item: state.workouts[index],
               );
             }),
-          )
-        : Center(
-            child: Text(
-              'No training log',
-              style: AppFonts.w400f20.copyWith(
-                color: AppColors.text2,
-              ),
-            ),
           );
+    } else {
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: Center(
+          child: Text(
+            'No training log',
+            style: AppFonts.w400f20.copyWith(
+              color: AppColors.text2,
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

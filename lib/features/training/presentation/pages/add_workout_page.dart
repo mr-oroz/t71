@@ -119,7 +119,7 @@ class AddWorkoutPage extends HookConsumerWidget {
               ),
               const Gap(15),
               CustomTextField(
-                type: TextInputType.number,
+                
                 controller: locationCtrl,
                 hintText: 'Location',
               ),

@@ -104,7 +104,8 @@ class AddGameProvider extends _$AddGameProvider {
 
   void deleteGame(String id) {
     final updateGames = state.addGames.where((item) => item.id != id).toList();
-    state = state.copyWith(addGames: updateGames);
+    final updateFilterGames = state.filteredGames.where((item) => item.id != id).toList();
+    state = state.copyWith(addGames: updateGames, filteredGames: updateFilterGames);
   }
 
   void updateGame(AddGameModel body) {
