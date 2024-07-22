@@ -31,10 +31,14 @@ class CreateProfilePage extends HookConsumerWidget {
       'Intermediate',
       'Advanced',
     ]);
-    final user = ref.watch(createProfileProvider);
+    final user = ref.watch(createProfileProvider).user;
     final image = useState<Uint8List?>(null);
     Future<void> selectedImage() async {
       image.value = await pickImage(context);
+    }
+
+    void onSelect(String value) {
+      gameLevel.value = value;
     }
 
     void _clearControllers() {
@@ -42,8 +46,20 @@ class CreateProfilePage extends HookConsumerWidget {
       ageCtrl.clear();
       favoriteCtrl.clear();
       image.value = null;
-      gameLevel.value = 'Game Level'; 
+      gameLevel.value = 'Game Level';
     }
+
+    ref.listen<UserProfilestate>(createProfileProvider, (prev, next) {
+      if (next.user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddGamePage(),
+          ),
+        );
+        _clearControllers();
+      }
+    });
 
     return Scaffold(
       appBar: GlAppBar(
@@ -129,6 +145,7 @@ class CreateProfilePage extends HookConsumerWidget {
                 ),
                 const Gap(15),
                 CustomDropDown(
+                  onSelect: onSelect,
                   list: selected.value,
                   title: gameLevel.value,
                 ),
@@ -158,13 +175,6 @@ class CreateProfilePage extends HookConsumerWidget {
                       photo: image.value,
                     ),
                   );
-              _clearControllers();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddGamePage(),
-                ),
-              );
             }
           },
           height: 56,

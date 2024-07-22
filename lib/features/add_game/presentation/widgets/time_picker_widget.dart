@@ -15,7 +15,7 @@ class TimePickerPage extends HookConsumerWidget {
     final hour = useState<int>(10);
     final minute = useState<int>(10);
     final isAM = useState<bool>(true);
-
+    final selectedIndex = useState<int>(0);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -74,11 +74,16 @@ class TimePickerPage extends HookConsumerWidget {
                 ),
               ),
               ToggleButtons(
-                borderColor: Colors.transparent,
+                fillColor: AppColors.white,
+                borderWidth: 0,
+                borderColor: Colors.white,
+                renderBorder: false,
                 isSelected: [isAM.value, !isAM.value],
                 selectedColor: AppColors.text,
                 onPressed: (int index) {
                   isAM.value = index == 0;
+                  selectedIndex.value = index;
+                  ref.read(addGameProviderProvider.notifier).changeTypeTimer(isAM.value);
                 },
                 children: <Widget>[
                   Padding(
@@ -87,6 +92,7 @@ class TimePickerPage extends HookConsumerWidget {
                       'AM',
                       style: AppFonts.w400f20.copyWith(
                         fontSize: 24,
+                        color: selectedIndex.value == 0 ? AppColors.text : AppColors.text2,
                       ),
                     ),
                   ),
@@ -96,6 +102,7 @@ class TimePickerPage extends HookConsumerWidget {
                       'PM',
                       style: AppFonts.w400f20.copyWith(
                         fontSize: 24,
+                        color: selectedIndex.value == 1 ? AppColors.text : AppColors.text2,
                       ),
                     ),
                   ),

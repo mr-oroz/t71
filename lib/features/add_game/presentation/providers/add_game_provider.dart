@@ -14,6 +14,7 @@ class AddGameState with _$AddGameState {
     DateTime? focusedDay,
     @Default(10) int minute,
     @Default(10) int hour,
+    @Default('AM') String typeTimer,
     final AddGameModel? gameCard,
   }) = _AddGameState;
 
@@ -100,5 +101,8 @@ class AddGameProvider extends _$AddGameProvider {
 
   void onMinute(int min) {
     state = state.copyWith(minute: min);
+  }
+  void changeTypeTimer (bool isAm) {
+    state = state.copyWith(typeTimer: isAm ? 'AM' : "PM");
   }
 }

@@ -6,40 +6,41 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:t71/core/theme/app_colors.dart';
 import 'package:t71/core/theme/app_fonts.dart';
-import 'package:t71/features/add_game/presentation/providers/add_game_provider.dart';
 
 class CalendarWidget extends HookConsumerWidget {
   const CalendarWidget({
     super.key,
     required this.controller,
     required this.focusedDay,
+    required this.onMonthChanged,
+    required this.onDateChange,
   });
 
   final EasyInfiniteDateTimelineController controller;
   final DateTime focusedDay;
+  final Function(DateTime month) onMonthChanged;
+  final Function(DateTime selected) onDateChange;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final focused = useState<DateTime>(focusedDay);
-
-    void onMonthChanged(DateTime month) {
-      focused.value = DateTime(month.year, month.month, 1);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.jumpToDate(focused.value);
-      });
-      ref.read(addGameProviderProvider.notifier).onMonthChanged(month);
-    }
-
-    void onDateChange(DateTime selected) {
-      focused.value = selected;
-      ref.read(addGameProviderProvider.notifier).onDateChange(selected);
-    }
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.jumpToDate(focused.value);
       });
     }, [focused.value]);
+
+    void _onMonthChanged(DateTime month) {
+      onMonthChanged(month);
+      focused.value = month;
+    }
+
+    void _onDateChange(DateTime selected) {
+      onDateChange(selected);
+      focused.value = selected;
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
@@ -53,13 +54,13 @@ class CalendarWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HorizontalMonthPicker(
-            onMonthChanged: onMonthChanged,
+            onMonthChanged: _onMonthChanged,
           ),
           const SizedBox(height: 16),
           EasyInfiniteDateTimeLine(
             showTimelineHeader: false,
             controller: controller,
-            onDateChange: (value) => onDateChange(value),
+            onDateChange: (value) => _onDateChange(value),
             dayProps: EasyDayProps(
               todayStyle: DayStyle(
                 decoration: BoxDecoration(

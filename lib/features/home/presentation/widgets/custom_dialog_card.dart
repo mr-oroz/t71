@@ -104,7 +104,8 @@ class CustomDialogCard extends HookConsumerWidget {
               Gap(15),
               AppButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  print('Button clicked');
+                  Navigator.of(context).pop();
                 },
                 title: 'Didn\'t take place',
                 height: 44,
@@ -117,7 +118,7 @@ class CustomDialogCard extends HookConsumerWidget {
                   ref
                       .read(addGameProviderProvider.notifier)
                       .addHistoryGames(item);
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                 },
                 title: 'Done',
                 height: 44,
@@ -127,7 +128,8 @@ class CustomDialogCard extends HookConsumerWidget {
               Gap(15),
               AppButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  print('Button clicked');
+                  Navigator.of(context).pop();
                 },
                 title: 'Skip',
                 height: 44,

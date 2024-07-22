@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:t71/core/theme/app_colors.dart';
 import 'package:t71/core/theme/app_fonts.dart';
@@ -28,11 +27,10 @@ class CustomTextField extends StatelessWidget {
       },
       controller: controller,
       maxLines: maxLines ?? 1,
-      style: AppFonts.w400f14.copyWith(
-        color: AppColors.text2,
-      ),
+      style: AppFonts.w400f14,
       keyboardType: type ?? TextInputType.text,
       decoration: InputDecoration(
+        hintStyle: AppFonts.w400f14.copyWith(color: AppColors.text2),
         hintText: hintText,
         fillColor: AppColors.white,
         filled: true,

@@ -11,15 +11,18 @@ class CustomDropDown extends HookConsumerWidget {
     super.key,
     required this.list,
     required this.title,
+    required this.onSelect,
   });
   final String title;
   final List<String> list;
+  final Function(String value) onSelect;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState<int>(0);
     final selectedTitle = useState<String>(title);
     final selectedList = useState<List<String>>(list);
     final isFound = useState<bool>(false);
+
     void toggleDropDown() {
       isFound.value = !isFound.value;
     }
@@ -71,6 +74,7 @@ class CustomDropDown extends HookConsumerWidget {
                     onTap: () {
                       selectedIndex.value = index;
                       selectedTitle.value = selectedList.value[index];
+                      onSelect(selectedList.value[index]);
                       isFound.value = false;
                     },
                     child: Container(

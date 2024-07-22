@@ -9,13 +9,13 @@ part 'create_profile_provider.g.dart';
 @freezed
 class UserProfilestate with _$UserProfilestate {
   const factory UserProfilestate({
-    final UserProfileModel? user,
+  UserProfileModel? user,
   }) = _UserProfilestate;
 
   factory UserProfilestate.initial() {
-    return  const UserProfilestate(user: null);
+    return  UserProfilestate();
   }
-}
+} 
 
 @riverpod
 class CreateProfile extends _$CreateProfile {
@@ -23,6 +23,8 @@ class CreateProfile extends _$CreateProfile {
   UserProfilestate build() {
     return UserProfilestate.initial();
   }
+
+  
 
   void createUser(UserProfileModel user) {
     final userId = const Uuid().v1();
@@ -33,6 +35,8 @@ class CreateProfile extends _$CreateProfile {
   void deleteUser() {
     state = state.copyWith(user: null);
   }
+
+  
 
   void editUser(UserProfileModel user) {
     final currentState = state.user;

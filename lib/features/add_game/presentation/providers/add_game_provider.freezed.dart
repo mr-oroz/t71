@@ -21,6 +21,7 @@ mixin _$AddGameState {
   DateTime? get focusedDay => throw _privateConstructorUsedError;
   int get minute => throw _privateConstructorUsedError;
   int get hour => throw _privateConstructorUsedError;
+  String get typeTimer => throw _privateConstructorUsedError;
   AddGameModel? get gameCard => throw _privateConstructorUsedError;
 
   /// Create a copy of AddGameState
@@ -42,6 +43,7 @@ abstract class $AddGameStateCopyWith<$Res> {
       DateTime? focusedDay,
       int minute,
       int hour,
+      String typeTimer,
       AddGameModel? gameCard});
 
   $AddGameModelCopyWith<$Res>? get gameCard;
@@ -67,6 +69,7 @@ class _$AddGameStateCopyWithImpl<$Res, $Val extends AddGameState>
     Object? focusedDay = freezed,
     Object? minute = null,
     Object? hour = null,
+    Object? typeTimer = null,
     Object? gameCard = freezed,
   }) {
     return _then(_value.copyWith(
@@ -90,6 +93,10 @@ class _$AddGameStateCopyWithImpl<$Res, $Val extends AddGameState>
           ? _value.hour
           : hour // ignore: cast_nullable_to_non_nullable
               as int,
+      typeTimer: null == typeTimer
+          ? _value.typeTimer
+          : typeTimer // ignore: cast_nullable_to_non_nullable
+              as String,
       gameCard: freezed == gameCard
           ? _value.gameCard
           : gameCard // ignore: cast_nullable_to_non_nullable
@@ -126,6 +133,7 @@ abstract class _$$AddGameStateImplCopyWith<$Res>
       DateTime? focusedDay,
       int minute,
       int hour,
+      String typeTimer,
       AddGameModel? gameCard});
 
   @override
@@ -150,6 +158,7 @@ class __$$AddGameStateImplCopyWithImpl<$Res>
     Object? focusedDay = freezed,
     Object? minute = null,
     Object? hour = null,
+    Object? typeTimer = null,
     Object? gameCard = freezed,
   }) {
     return _then(_$AddGameStateImpl(
@@ -173,6 +182,10 @@ class __$$AddGameStateImplCopyWithImpl<$Res>
           ? _value.hour
           : hour // ignore: cast_nullable_to_non_nullable
               as int,
+      typeTimer: null == typeTimer
+          ? _value.typeTimer
+          : typeTimer // ignore: cast_nullable_to_non_nullable
+              as String,
       gameCard: freezed == gameCard
           ? _value.gameCard
           : gameCard // ignore: cast_nullable_to_non_nullable
@@ -190,6 +203,7 @@ class _$AddGameStateImpl implements _AddGameState {
       this.focusedDay,
       this.minute = 10,
       this.hour = 10,
+      this.typeTimer = 'AM',
       this.gameCard})
       : _addGames = addGames,
         _historyGames = historyGames;
@@ -221,11 +235,14 @@ class _$AddGameStateImpl implements _AddGameState {
   @JsonKey()
   final int hour;
   @override
+  @JsonKey()
+  final String typeTimer;
+  @override
   final AddGameModel? gameCard;
 
   @override
   String toString() {
-    return 'AddGameState(addGames: $addGames, historyGames: $historyGames, focusedDay: $focusedDay, minute: $minute, hour: $hour, gameCard: $gameCard)';
+    return 'AddGameState(addGames: $addGames, historyGames: $historyGames, focusedDay: $focusedDay, minute: $minute, hour: $hour, typeTimer: $typeTimer, gameCard: $gameCard)';
   }
 
   @override
@@ -240,6 +257,8 @@ class _$AddGameStateImpl implements _AddGameState {
                 other.focusedDay == focusedDay) &&
             (identical(other.minute, minute) || other.minute == minute) &&
             (identical(other.hour, hour) || other.hour == hour) &&
+            (identical(other.typeTimer, typeTimer) ||
+                other.typeTimer == typeTimer) &&
             (identical(other.gameCard, gameCard) ||
                 other.gameCard == gameCard));
   }
@@ -252,6 +271,7 @@ class _$AddGameStateImpl implements _AddGameState {
       focusedDay,
       minute,
       hour,
+      typeTimer,
       gameCard);
 
   /// Create a copy of AddGameState
@@ -270,6 +290,7 @@ abstract class _AddGameState implements AddGameState {
       final DateTime? focusedDay,
       final int minute,
       final int hour,
+      final String typeTimer,
       final AddGameModel? gameCard}) = _$AddGameStateImpl;
 
   @override
@@ -282,6 +303,8 @@ abstract class _AddGameState implements AddGameState {
   int get minute;
   @override
   int get hour;
+  @override
+  String get typeTimer;
   @override
   AddGameModel? get gameCard;
 

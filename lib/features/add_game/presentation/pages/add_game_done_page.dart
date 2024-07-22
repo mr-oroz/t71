@@ -31,6 +31,20 @@ class AddGameDonePage extends HookConsumerWidget {
       }
     }, [item]);
 
+    ref.listen<AddGameState>(addGameProviderProvider, (prev, next) {
+      if (next.addGames.isNotEmpty) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainPage(
+              idx: 0,
+            ),
+          ),
+          ((Route<dynamic> route) => false),
+        );
+      }
+    });
+
     return Scaffold(
       appBar: GlAppBar(
         title: Row(
@@ -104,7 +118,8 @@ class AddGameDonePage extends HookConsumerWidget {
                         nameOpponent: nameOpponentCtrl.text,
                         placeOfName: placeOfNameCtrl.text,
                         note: noteCtrl.text.isEmpty ? '' : noteCtrl.text,
-                        timer: '${gameState.hour}:${gameState.minute}',
+                        timer:
+                            '${gameState.hour}:${gameState.minute} ${gameState.typeTimer}',
                         date: gameState.focusedDay,
                         city: 'New Zeland',
                       ),
@@ -115,16 +130,13 @@ class AddGameDonePage extends HookConsumerWidget {
                         nameOpponent: nameOpponentCtrl.text,
                         placeOfName: placeOfNameCtrl.text,
                         note: noteCtrl.text.isEmpty ? '' : noteCtrl.text,
-                        timer: '${gameState.hour}:${gameState.minute}',
+                        timer:
+                            '${gameState.hour}:${gameState.minute} ${gameState.typeTimer}',
                         date: gameState.focusedDay,
                         city: 'New Zeland',
                       ),
                     );
               }
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage()),
-                  (Route<dynamic> route) => false);
             }
           },
           title: 'Done',

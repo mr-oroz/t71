@@ -33,15 +33,11 @@ class TimeLineWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void toggleActive() {
-      onTapIndex?.call(index);
-    }
-
     void _showModalAddCompany(BuildContext context) {
       showDialog(
         context: context,
         barrierColor: AppColors.blue2.withOpacity(0.3),
-        useRootNavigator: true,
+        barrierDismissible: false,
         builder: (
           context,
         ) {
@@ -52,9 +48,13 @@ class TimeLineWidget extends HookConsumerWidget {
       );
     }
 
+    void toggleActive() {
+      _showModalAddCompany(context);
+      onTapIndex?.call(index);
+    }
+
     void toggleLongActive() {
       ref.read(addGameProviderProvider.notifier).toggleIsReditGame(item);
-      _showModalAddCompany(context);
     }
 
     Color getIndicatorColor() {
@@ -80,7 +80,6 @@ class TimeLineWidget extends HookConsumerWidget {
     return GestureDetector(
       onTap: () {
         toggleActive();
-        _showModalAddCompany(context);
       },
       onLongPress: toggleLongActive,
       child: TimelineTile(
@@ -202,7 +201,7 @@ class TimelineContent extends StatelessWidget {
               ),
               const Gap(5),
               Text(
-                '${item.timer} PM',
+                '${item.timer}',
                 style: AppFonts.w400f13.copyWith(
                   color: getIndicatorColor,
                 ),

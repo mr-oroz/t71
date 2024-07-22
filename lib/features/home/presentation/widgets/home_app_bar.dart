@@ -16,7 +16,7 @@ class HomeAppbar extends HookConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(addGameProviderProvider).addGames;
     final gameCard = ref.watch(addGameProviderProvider).gameCard;
-
+    
     bool hasActiveGame = state.any((game) => game.isRedicActive);
 
     return Container(

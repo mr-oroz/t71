@@ -24,8 +24,24 @@ class AddGamePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final EasyInfiniteDateTimelineController controller =
         EasyInfiniteDateTimelineController();
-    final state = ref.watch(addGameProviderProvider);
-    final focusedDay = useState<DateTime>(state.focusedDay!);
+    final focusedDay = useState<DateTime>(DateTime.now());
+    void onMonthChanged(DateTime month) {
+      
+      focusedDay.value = DateTime(month.year, month.month, 1);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.jumpToDate(focusedDay.value);
+      });
+      ref.read(addGameProviderProvider.notifier).onMonthChanged(month);
+    }
+
+    void onDateChange(DateTime selected) {
+      
+      focusedDay.value = selected;
+      ref.read(addGameProviderProvider.notifier).onDateChange(selected);
+    }
+
+    
+
 
     return Scaffold(
       appBar: GlAppBar(
@@ -69,8 +85,10 @@ class AddGamePage extends HookConsumerWidget {
             Text('Select date', style: AppFonts.w400f14),
             const Gap(15),
             CalendarWidget(
+              onDateChange: onDateChange,
+              onMonthChanged: onMonthChanged,
               controller: controller,
-              focusedDay:focusedDay.value,
+              focusedDay: focusedDay.value,
             ),
             const Gap(20),
             const TimePickerPage(),
