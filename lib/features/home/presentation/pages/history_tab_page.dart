@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:t71/core/theme/app_colors.dart';
+import 'package:t71/core/theme/app_fonts.dart';
 import 'package:t71/features/add_game/presentation/providers/add_game_provider.dart';
 import 'package:t71/features/add_game/presentation/widgets/calendar_widget.dart';
 import 'package:t71/features/home/presentation/widgets/time_line_widget.dart';
@@ -16,17 +18,24 @@ class HistoryTabPage extends HookConsumerWidget {
     final EasyInfiniteDateTimelineController controller =
         EasyInfiniteDateTimelineController();
     final focusedDay = useState<DateTime>(state.focusedDay!);
+
+    void filterhistori(DateTime date) {
+      ref.read(addGameProviderProvider.notifier).filterHistory(date);
+    }
+
     void onMonthChanged(DateTime month) {
       focusedDay.value = DateTime(month.year, month.month, 1);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.jumpToDate(focusedDay.value);
       });
       ref.read(addGameProviderProvider.notifier).onMonthChanged(month);
+      filterhistori(month);
     }
 
     void onDateChange(DateTime selected) {
       focusedDay.value = selected;
       ref.read(addGameProviderProvider.notifier).onDateChange(selected);
+      filterhistori(selected);
     }
 
     return ListView(
@@ -39,19 +48,32 @@ class HistoryTabPage extends HookConsumerWidget {
           focusedDay: state.focusedDay!,
         ),
         const Gap(10),
-        Column(
-          children: List.generate(
-            state.historyGames.length,
-            (index) {
-              return TimeLineWidget(
-                selectedInde: 0,
-                item: state.historyGames[index],
-                index: index,
-                last: state.historyGames.length,
-              );
-            },
-          ),
-        )
+        if (state.filteredHistory.isNotEmpty)
+          Column(
+            children: List.generate(
+              state.historyGames.length,
+              (index) {
+                return TimeLineWidget(
+                  selectedInde: 0,
+                  item: state.filteredHistory[index],
+                  index: index,
+                  last: state.filteredHistory.length,
+                );
+              },
+            ),
+          )
+        else
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                'No history at the moment',
+                style: AppFonts.w500f20.copyWith(
+                  color: AppColors.text2,
+                ),
+              ),
+            ),
+          )
       ],
     );
   }

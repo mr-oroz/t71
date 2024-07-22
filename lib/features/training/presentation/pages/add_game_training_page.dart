@@ -27,7 +27,7 @@ class AddGameTrainingPage extends HookConsumerWidget {
     final EasyInfiniteDateTimelineController controller =
         EasyInfiniteDateTimelineController();
     final state = ref.watch(addGameProviderProvider);
-    final focusedDay = useState<DateTime>(state.focusedDay!);
+    final focusedDay = useState<DateTime>(DateTime.now());
 
     void onMonthChanged(DateTime month) {
       focusedDay.value = DateTime(month.year, month.month, 1);

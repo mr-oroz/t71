@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.5.0-180.3.beta <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
@@ -14,8 +14,6 @@ dependencies:
   carousel_slider: ^4.2.1
   dotted_border: ^2.1.0
   image_picker: ^1.1.2
-  flutter_bloc: ^8.1.6
-  bloc: ^8.1.4
 
   freezed_annotation: ^2.4.4
   get_it: ^7.7.0
@@ -40,12 +38,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  build_runner: ^2.4.11
-  riverpod_generator: ^2.4.2
+  build_runner: ^2.0.0
+  riverpod_generator: ^2.4.1
   freezed: ^2.5.7
   json_serializable: ^6.8.0
+dependency_overrides:
+  analyzer: 6.5.0
+  meta: 1.14.0
 flutter:
   uses-material-design: true
+
 
   assets:
     - assets/images/

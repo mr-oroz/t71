@@ -7,7 +7,7 @@ part of 'add_workout_provider.dart';
 // **************************************************************************
 
 String _$addWorkoutProviderHash() =>
-    r'be7d907557ad9d2f362ba67a1417d5ec8fe5df4d';
+    r'2a2fc1eb1731ce1fb11384545123bc92f6a18477';
 
 /// See also [AddWorkoutProvider].
 @ProviderFor(AddWorkoutProvider)

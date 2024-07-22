@@ -116,7 +116,7 @@ class CardTraining extends StatelessWidget {
                 ),
                 const Gap(5),
                 Text(
-                  'New Zeland',
+                  item.city ?? '',
                   style: AppFonts.w400f13.copyWith(
                     color: AppColors.text2,
                   ),

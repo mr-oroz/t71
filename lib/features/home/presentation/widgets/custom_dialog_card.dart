@@ -104,7 +104,6 @@ class CustomDialogCard extends HookConsumerWidget {
               Gap(15),
               AppButton(
                 onPressed: () {
-                  print('Button clicked');
                   Navigator.of(context).pop();
                 },
                 title: 'Didn\'t take place',
@@ -118,6 +117,9 @@ class CustomDialogCard extends HookConsumerWidget {
                   ref
                       .read(addGameProviderProvider.notifier)
                       .addHistoryGames(item);
+                  ref
+                      .read(addGameProviderProvider.notifier)
+                      .filterHistory(item.date!);
                   Navigator.of(context).pop();
                 },
                 title: 'Done',

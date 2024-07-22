@@ -14,12 +14,14 @@ class CalendarWidget extends HookConsumerWidget {
     required this.focusedDay,
     required this.onMonthChanged,
     required this.onDateChange,
+    this.onFilterGame,
   });
 
   final EasyInfiniteDateTimelineController controller;
   final DateTime focusedDay;
   final Function(DateTime month) onMonthChanged;
   final Function(DateTime selected) onDateChange;
+  final Function(DateTime select)? onFilterGame;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,6 +41,7 @@ class CalendarWidget extends HookConsumerWidget {
     void _onDateChange(DateTime selected) {
       onDateChange(selected);
       focused.value = selected;
+      onFilterGame?.call(selected);
     }
 
     return Container(

@@ -93,25 +93,25 @@ class CreateProfilePage extends HookConsumerWidget {
                 const Gap(15),
                 GestureDetector(
                   onTap: selectedImage,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: const Radius.circular(12),
-                    dashPattern: const [10, 5],
-                    color: AppColors.text2,
-                    strokeWidth: 2,
-                    child: image.value != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: SizedBox(
-                              height: 90,
-                              width: double.infinity,
-                              child: Image.memory(
-                                image.value!,
-                                fit: BoxFit.cover,
-                              ),
+                  child: image.value != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: SizedBox(
+                            height: 90,
+                            width: double.infinity,
+                            child: Image.memory(
+                              image.value!,
+                              fit: BoxFit.cover,
                             ),
-                          )
-                        : Container(
+                          ),
+                        )
+                      : DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(12),
+                          dashPattern: const [10, 5],
+                          color: AppColors.text2,
+                          strokeWidth: 2,
+                          child: Container(
                             height: 90,
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             width: double.infinity,
@@ -128,7 +128,7 @@ class CreateProfilePage extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                  ),
+                        ),
                 ),
                 const Gap(15),
                 CustomTextField(
@@ -160,7 +160,7 @@ class CreateProfilePage extends HookConsumerWidget {
           bgColor: AppColors.blue,
           textColor: AppColors.white,
           onPressed: () {
-            if (nameCtrl.text.isNotEmpty &&
+            if (formKey.currentState!.validate() && nameCtrl.text.isNotEmpty &&
                 gameLevel.value != 'Game level' &&
                 favoriteCtrl.text.isNotEmpty &&
                 ageCtrl.text.isNotEmpty &&

@@ -24,6 +24,10 @@ class NoteProvider extends _$NoteProvider {
     return NodeState.initial();
   }
 
+  void clearDataState () {
+    state = state.copyWith(notes: []);
+  }
+
   void addNote(NotesModel body) {
     final updateNote = body.copyWith(id: Uuid().v1());
     state = state.copyWith(notes: [updateNote, ...state.notes]);

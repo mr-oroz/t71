@@ -18,9 +18,12 @@ class AddGameDonePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final _formKey = GlobalKey<FormState>();
     final gameState = ref.watch(addGameProviderProvider);
     final placeOfNameCtrl = useTextEditingController();
     final nameOpponentCtrl = useTextEditingController();
+    final locationCtrl = useTextEditingController();
+
     final noteCtrl = useTextEditingController();
 
     useEffect(() {
@@ -78,30 +81,39 @@ class AddGameDonePage extends HookConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 15,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 15,
+            ),
+            children: [
+              Text('Select date', style: AppFonts.w400f14),
+              const Gap(15),
+              CustomTextField(
+                controller: placeOfNameCtrl,
+                hintText: 'Place of game',
+              ),
+              const Gap(15),
+              CustomTextField(
+                controller: nameOpponentCtrl,
+                hintText: 'Name of opponent',
+              ),
+              const Gap(15),
+              CustomTextField(
+                controller: locationCtrl,
+                hintText: 'Location',
+              ),
+              const Gap(15),
+              CustomTextField(
+                not: true,
+                maxLines: 3,
+                controller: noteCtrl,
+                hintText: 'Note (optional)',
+              )
+            ],
           ),
-          children: [
-            Text('Select date', style: AppFonts.w400f14),
-            const Gap(15),
-            CustomTextField(
-              controller: placeOfNameCtrl,
-              hintText: 'Place of game',
-            ),
-            const Gap(15),
-            CustomTextField(
-              controller: nameOpponentCtrl,
-              hintText: 'Name of opponent',
-            ),
-            const Gap(15),
-            CustomTextField(
-              maxLines: 3,
-              controller: noteCtrl,
-              hintText: 'Note (optional)',
-            )
-          ],
         ),
       ),
       floatingActionButton: Container(
@@ -109,8 +121,8 @@ class AddGameDonePage extends HookConsumerWidget {
         child: AppButton(
           height: 56,
           onPressed: () {
-            if (nameOpponentCtrl.text.isNotEmpty &&
-                placeOfNameCtrl.text.isNotEmpty) {
+            if (_formKey.currentState!.validate() && nameOpponentCtrl.text.isNotEmpty &&
+                placeOfNameCtrl.text.isNotEmpty && locationCtrl.text.isNotEmpty) {
               if (item != null) {
                 ref.read(addGameProviderProvider.notifier).updateGame(
                       AddGameModel(
@@ -121,7 +133,7 @@ class AddGameDonePage extends HookConsumerWidget {
                         timer:
                             '${gameState.hour}:${gameState.minute} ${gameState.typeTimer}',
                         date: gameState.focusedDay,
-                        city: 'New Zeland',
+                        city: locationCtrl.text,
                       ),
                     );
               } else {
@@ -133,9 +145,10 @@ class AddGameDonePage extends HookConsumerWidget {
                         timer:
                             '${gameState.hour}:${gameState.minute} ${gameState.typeTimer}',
                         date: gameState.focusedDay,
-                        city: 'New Zeland',
+                        city: locationCtrl.text,
                       ),
                     );
+                ref.read(addGameProviderProvider.notifier).filterGames(gameState.focusedDay!);
               }
             }
           },

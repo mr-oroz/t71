@@ -18,7 +18,7 @@ class CustomDropDown extends HookConsumerWidget {
   final Function(String value) onSelect;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState<int>(0);
+    final selectedIndex = useState<int>(1);
     final selectedTitle = useState<String>(title);
     final selectedList = useState<List<String>>(list);
     final isFound = useState<bool>(false);
@@ -92,10 +92,10 @@ class CustomDropDown extends HookConsumerWidget {
                             height: 20,
                             width: 20,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isActive
-                                    ? AppColors.blue
-                                    : AppColors.blue2),
+                              shape: BoxShape.circle,
+                              color:
+                                  isActive ? AppColors.blue : AppColors.blue2,
+                            ),
                             child: isActive
                                 ? const AppIcon(
                                     AppIcons.approve,

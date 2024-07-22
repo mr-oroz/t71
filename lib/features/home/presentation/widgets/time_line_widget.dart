@@ -9,6 +9,8 @@ import 'package:t71/core/widgets/app_button.dart';
 import 'package:t71/core/widgets/app_icons.dart';
 import 'package:t71/features/add_game/domain/models/add_game_model.dart';
 import 'package:t71/features/add_game/presentation/providers/add_game_provider.dart';
+import 'package:t71/features/create_profile/domain/models/user_profile_model.dart';
+import 'package:t71/features/create_profile/presentation/providers/create_profile_provider.dart';
 import 'package:t71/features/home/presentation/widgets/custom_dialog_card.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -33,11 +35,11 @@ class TimeLineWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(createProfileProvider).user;
     void _showModalAddCompany(BuildContext context) {
       showDialog(
         context: context,
         barrierColor: AppColors.blue2.withOpacity(0.3),
-        barrierDismissible: false,
         builder: (
           context,
         ) {
@@ -117,6 +119,7 @@ class TimeLineWidget extends HookConsumerWidget {
             minHeight: 120,
           ),
           child: TimelineContent(
+            user: user!,
             getIndicatorColor: getTextColor(),
             item: item,
             isActive: selectedInde == index || item.isRedicActive,
@@ -131,11 +134,13 @@ class TimelineContent extends StatelessWidget {
   final AddGameModel item;
   final bool isActive;
   final Color getIndicatorColor;
+  final UserProfileModel user;
   const TimelineContent({
     super.key,
     required this.item,
     required this.isActive,
     required this.getIndicatorColor,
+    required this.user,
   });
 
   @override
@@ -157,7 +162,7 @@ class TimelineContent extends StatelessWidget {
                   ),
                   const Gap(10),
                   Text(
-                    item.nameOpponent ?? '',
+                    user.username ?? '',
                     style: AppFonts.w400f13.copyWith(
                       color: getIndicatorColor,
                     ),
@@ -216,7 +221,7 @@ class TimelineContent extends StatelessWidget {
               ),
               const Gap(5),
               Text(
-                'New Zeland',
+                item.city ?? '',
                 style: AppFonts.w400f13.copyWith(
                   color: getIndicatorColor,
                 ),

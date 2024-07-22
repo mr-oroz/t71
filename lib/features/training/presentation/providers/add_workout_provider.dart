@@ -37,6 +37,10 @@ class AddWorkoutProvider extends _$AddWorkoutProvider {
     );
   }
 
+  void clearDataState () {
+    state = state.copyWith(workouts: []);
+  }
+
   void onMonthChanged(DateTime month) {
     state = state.copyWith(
       focusedDay: DateTime(month.year, month.month, 1),

@@ -21,12 +21,26 @@ class AddNotePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = GlobalKey<FormState>();
     final titleCtrl = useTextEditingController();
     final noteCtrl = useTextEditingController();
     final image = useState<Uint8List?>(null);
     Future<void> selectedImage() async {
       image.value = await pickImage(context);
     }
+
+    ref.listen<NodeState>(noteProviderProvider, (prev, next) {
+      if (next.notes.isNotEmpty) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainPage(
+                idx: 2,
+              ),
+            ),
+            (Route<dynamic> route) => false);
+      }
+    });
 
     return Scaffold(
       appBar: GlAppBar(
@@ -62,21 +76,17 @@ class AddNotePage extends HookConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            CustomTextField(
-              controller: titleCtrl,
-              hintText: 'Title',
-            ),
-            Gap(15),
-            GestureDetector(
-              onTap: selectedImage,
-              child: DottedBorder(
-                borderType: BorderType.RRect,
-                radius: const Radius.circular(12),
-                dashPattern: const [10, 5],
-                color: AppColors.text2,
-                strokeWidth: 2,
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              CustomTextField(
+                controller: titleCtrl,
+                hintText: 'Title',
+              ),
+              Gap(15),
+              GestureDetector(
+                onTap: selectedImage,
                 child: image.value != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -89,32 +99,40 @@ class AddNotePage extends HookConsumerWidget {
                           ),
                         ),
                       )
-                    : Container(
-                        height: 90,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Add photo (optional)',
-                            style: AppFonts.w400f14.copyWith(
-                              color: AppColors.text2,
+                    : DottedBorder(
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(12),
+                        dashPattern: const [10, 5],
+                        color: AppColors.text2,
+                        strokeWidth: 2,
+                        child: Container(
+                          height: 90,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Add photo (optional)',
+                              style: AppFonts.w400f14.copyWith(
+                                color: AppColors.text2,
+                              ),
                             ),
                           ),
                         ),
                       ),
               ),
-            ),
-            const Gap(15),
-            CustomTextField(
-              maxLines: 3,
-              controller: noteCtrl,
-              hintText: 'Note (optional)',
-            ),
-          ],
+              const Gap(15),
+              CustomTextField(
+                not: true,
+                maxLines: 3,
+                controller: noteCtrl,
+                hintText: 'Note (optional)',
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Padding(
@@ -124,7 +142,7 @@ class AddNotePage extends HookConsumerWidget {
         child: AppButton(
           height: 56,
           onPressed: () {
-            if (titleCtrl.text.isNotEmpty && image.value != null) {
+            if ( formKey.currentState!.validate() && titleCtrl.text.isNotEmpty && image.value != null) {
               ref.read(noteProviderProvider.notifier).addNote(
                     NotesModel(
                       title: titleCtrl.text,
@@ -132,12 +150,6 @@ class AddNotePage extends HookConsumerWidget {
                       photo: image.value,
                     ),
                   );
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MainPage(idx: 2,),
-                  ),
-                  (Route<dynamic> route) => false);
             }
           },
           title: 'Save',

@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AddGameState {
   List<AddGameModel> get addGames => throw _privateConstructorUsedError;
   List<AddGameModel> get historyGames => throw _privateConstructorUsedError;
+  List<AddGameModel> get filteredGames => throw _privateConstructorUsedError;
+  List<AddGameModel> get filteredHistory => throw _privateConstructorUsedError;
   DateTime? get focusedDay => throw _privateConstructorUsedError;
   int get minute => throw _privateConstructorUsedError;
   int get hour => throw _privateConstructorUsedError;
@@ -40,6 +42,8 @@ abstract class $AddGameStateCopyWith<$Res> {
   $Res call(
       {List<AddGameModel> addGames,
       List<AddGameModel> historyGames,
+      List<AddGameModel> filteredGames,
+      List<AddGameModel> filteredHistory,
       DateTime? focusedDay,
       int minute,
       int hour,
@@ -66,6 +70,8 @@ class _$AddGameStateCopyWithImpl<$Res, $Val extends AddGameState>
   $Res call({
     Object? addGames = null,
     Object? historyGames = null,
+    Object? filteredGames = null,
+    Object? filteredHistory = null,
     Object? focusedDay = freezed,
     Object? minute = null,
     Object? hour = null,
@@ -80,6 +86,14 @@ class _$AddGameStateCopyWithImpl<$Res, $Val extends AddGameState>
       historyGames: null == historyGames
           ? _value.historyGames
           : historyGames // ignore: cast_nullable_to_non_nullable
+              as List<AddGameModel>,
+      filteredGames: null == filteredGames
+          ? _value.filteredGames
+          : filteredGames // ignore: cast_nullable_to_non_nullable
+              as List<AddGameModel>,
+      filteredHistory: null == filteredHistory
+          ? _value.filteredHistory
+          : filteredHistory // ignore: cast_nullable_to_non_nullable
               as List<AddGameModel>,
       focusedDay: freezed == focusedDay
           ? _value.focusedDay
@@ -130,6 +144,8 @@ abstract class _$$AddGameStateImplCopyWith<$Res>
   $Res call(
       {List<AddGameModel> addGames,
       List<AddGameModel> historyGames,
+      List<AddGameModel> filteredGames,
+      List<AddGameModel> filteredHistory,
       DateTime? focusedDay,
       int minute,
       int hour,
@@ -155,6 +171,8 @@ class __$$AddGameStateImplCopyWithImpl<$Res>
   $Res call({
     Object? addGames = null,
     Object? historyGames = null,
+    Object? filteredGames = null,
+    Object? filteredHistory = null,
     Object? focusedDay = freezed,
     Object? minute = null,
     Object? hour = null,
@@ -169,6 +187,14 @@ class __$$AddGameStateImplCopyWithImpl<$Res>
       historyGames: null == historyGames
           ? _value._historyGames
           : historyGames // ignore: cast_nullable_to_non_nullable
+              as List<AddGameModel>,
+      filteredGames: null == filteredGames
+          ? _value._filteredGames
+          : filteredGames // ignore: cast_nullable_to_non_nullable
+              as List<AddGameModel>,
+      filteredHistory: null == filteredHistory
+          ? _value._filteredHistory
+          : filteredHistory // ignore: cast_nullable_to_non_nullable
               as List<AddGameModel>,
       focusedDay: freezed == focusedDay
           ? _value.focusedDay
@@ -200,13 +226,17 @@ class _$AddGameStateImpl implements _AddGameState {
   const _$AddGameStateImpl(
       {final List<AddGameModel> addGames = const [],
       final List<AddGameModel> historyGames = const [],
+      final List<AddGameModel> filteredGames = const [],
+      final List<AddGameModel> filteredHistory = const [],
       this.focusedDay,
       this.minute = 10,
       this.hour = 10,
       this.typeTimer = 'AM',
       this.gameCard})
       : _addGames = addGames,
-        _historyGames = historyGames;
+        _historyGames = historyGames,
+        _filteredGames = filteredGames,
+        _filteredHistory = filteredHistory;
 
   final List<AddGameModel> _addGames;
   @override
@@ -226,6 +256,24 @@ class _$AddGameStateImpl implements _AddGameState {
     return EqualUnmodifiableListView(_historyGames);
   }
 
+  final List<AddGameModel> _filteredGames;
+  @override
+  @JsonKey()
+  List<AddGameModel> get filteredGames {
+    if (_filteredGames is EqualUnmodifiableListView) return _filteredGames;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filteredGames);
+  }
+
+  final List<AddGameModel> _filteredHistory;
+  @override
+  @JsonKey()
+  List<AddGameModel> get filteredHistory {
+    if (_filteredHistory is EqualUnmodifiableListView) return _filteredHistory;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filteredHistory);
+  }
+
   @override
   final DateTime? focusedDay;
   @override
@@ -242,7 +290,7 @@ class _$AddGameStateImpl implements _AddGameState {
 
   @override
   String toString() {
-    return 'AddGameState(addGames: $addGames, historyGames: $historyGames, focusedDay: $focusedDay, minute: $minute, hour: $hour, typeTimer: $typeTimer, gameCard: $gameCard)';
+    return 'AddGameState(addGames: $addGames, historyGames: $historyGames, filteredGames: $filteredGames, filteredHistory: $filteredHistory, focusedDay: $focusedDay, minute: $minute, hour: $hour, typeTimer: $typeTimer, gameCard: $gameCard)';
   }
 
   @override
@@ -253,6 +301,10 @@ class _$AddGameStateImpl implements _AddGameState {
             const DeepCollectionEquality().equals(other._addGames, _addGames) &&
             const DeepCollectionEquality()
                 .equals(other._historyGames, _historyGames) &&
+            const DeepCollectionEquality()
+                .equals(other._filteredGames, _filteredGames) &&
+            const DeepCollectionEquality()
+                .equals(other._filteredHistory, _filteredHistory) &&
             (identical(other.focusedDay, focusedDay) ||
                 other.focusedDay == focusedDay) &&
             (identical(other.minute, minute) || other.minute == minute) &&
@@ -268,6 +320,8 @@ class _$AddGameStateImpl implements _AddGameState {
       runtimeType,
       const DeepCollectionEquality().hash(_addGames),
       const DeepCollectionEquality().hash(_historyGames),
+      const DeepCollectionEquality().hash(_filteredGames),
+      const DeepCollectionEquality().hash(_filteredHistory),
       focusedDay,
       minute,
       hour,
@@ -287,6 +341,8 @@ abstract class _AddGameState implements AddGameState {
   const factory _AddGameState(
       {final List<AddGameModel> addGames,
       final List<AddGameModel> historyGames,
+      final List<AddGameModel> filteredGames,
+      final List<AddGameModel> filteredHistory,
       final DateTime? focusedDay,
       final int minute,
       final int hour,
@@ -297,6 +353,10 @@ abstract class _AddGameState implements AddGameState {
   List<AddGameModel> get addGames;
   @override
   List<AddGameModel> get historyGames;
+  @override
+  List<AddGameModel> get filteredGames;
+  @override
+  List<AddGameModel> get filteredHistory;
   @override
   DateTime? get focusedDay;
   @override

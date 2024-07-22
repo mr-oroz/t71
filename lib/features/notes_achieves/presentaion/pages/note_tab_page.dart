@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:t71/core/theme/app_colors.dart';
+import 'package:t71/core/theme/app_fonts.dart';
 import 'package:t71/features/notes_achieves/domain/notes_model.dart';
 import 'package:t71/features/notes_achieves/presentaion/pages/note_detail_page.dart';
 import 'package:t71/features/notes_achieves/presentaion/providers/note_provider.dart';
@@ -19,15 +20,26 @@ class NoteTabPage extends HookConsumerWidget {
       padding: EdgeInsets.symmetric(
         horizontal: 15,
       ).copyWith(top: 15),
-      child: StaggeredGrid.count(
-        crossAxisCount: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        children: List.generate(state.notes.length, (index) {
-          final item = state.notes[index];
-          return NoteTile(note: item);
-        }),
-      ),
+      child: state.notes.isNotEmpty
+          ? StaggeredGrid.count(
+              crossAxisCount: 1,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              children: List.generate(state.notes.length, (index) {
+                final item = state.notes[index];
+                return NoteTile(note: item);
+              }),
+            )
+          : Center(
+              child: Center(
+                child: Text(
+                  'No notes',
+                  style: AppFonts.w400f20.copyWith(
+                    color: AppColors.text2,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }

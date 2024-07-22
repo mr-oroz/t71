@@ -9,19 +9,25 @@ class CustomTextField extends StatelessWidget {
     this.maxLines,
     required this.hintText,
     this.type,
+    this.not = false,
   });
 
   final TextEditingController controller;
   final int? maxLines;
   final String hintText;
   final TextInputType? type;
+  final bool? not;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       validator: (value) {
-        if (value != null) {
-          return 'error';
+        if (not == true) {
+          return null;
+        } else {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $hintText';
+          }
         }
         return null;
       },

@@ -23,8 +23,10 @@ class AddWorkoutPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gameState = ref.watch(addWorkoutProviderProvider);
     final typeTimer = ref.watch(addGameProviderProvider).typeTimer;
-
+    final formKey = GlobalKey<FormState>();
     final placeOfWorkouttrl = useTextEditingController();
+    final locationCtrl = useTextEditingController();
+
     final nameCoachCtrl = useTextEditingController();
     final durationCtrl = useTextEditingController();
     final noteCtrl = useTextEditingController();
@@ -90,49 +92,58 @@ class AddWorkoutPage extends HookConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 15,
+        child: Form(
+          key: formKey,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 15,
+            ),
+            children: [
+              Text('Select date', style: AppFonts.w400f14),
+              const Gap(15),
+              CustomTextField(
+                controller: nameCoachCtrl,
+                hintText: 'Place of workout',
+              ),
+              const Gap(15),
+              CustomTextField(
+                controller: placeOfWorkouttrl,
+                hintText: 'Name coach',
+              ),
+              const Gap(15),
+              CustomTextField(
+                type: TextInputType.number,
+                controller: durationCtrl,
+                hintText: 'Duration of training (Hours)',
+              ),
+              const Gap(15),
+              CustomTextField(
+                type: TextInputType.number,
+                controller: locationCtrl,
+                hintText: 'Location',
+              ),
+              const Gap(15),
+              CustomDropDown(
+                onSelect: onSelectType,
+                list: selectedType.value,
+                title: type.value,
+              ),
+              const Gap(15),
+              CustomDropDown(
+                onSelect: onSelectIntensity,
+                list: selectIntensity.value,
+                title: intensity.value,
+              ),
+              const Gap(15),
+              CustomTextField(
+                not: true,
+                maxLines: 3,
+                controller: noteCtrl,
+                hintText: 'Note (optional)',
+              )
+            ],
           ),
-          children: [
-            Text('Select date', style: AppFonts.w400f14),
-            const Gap(15),
-            CustomTextField(
-              controller: nameCoachCtrl,
-              hintText: 'Place of workout',
-            ),
-            const Gap(15),
-            CustomTextField(
-              controller: placeOfWorkouttrl,
-              hintText: 'Name coach',
-            ),
-            const Gap(15),
-            CustomTextField(
-              type: TextInputType.number,
-              controller: durationCtrl,
-              hintText: 'Duration of training (Hours)',
-            ),
-            const Gap(15),
-            const Gap(15),
-            CustomDropDown(
-              onSelect: onSelectType,
-              list: selectedType.value,
-              title: type.value,
-            ),
-            const Gap(15),
-            CustomDropDown(
-              onSelect: onSelectIntensity,
-              list: selectIntensity.value,
-              title: intensity.value,
-            ),
-            const Gap(15),
-            CustomTextField(
-              maxLines: 3,
-              controller: noteCtrl,
-              hintText: 'Note (optional)',
-            )
-          ],
         ),
       ),
       floatingActionButton: Container(
@@ -140,9 +151,11 @@ class AddWorkoutPage extends HookConsumerWidget {
         child: AppButton(
           height: 56,
           onPressed: () {
-            if (nameCoachCtrl.text.isNotEmpty &&
+            if (formKey.currentState!.validate() &&
+                nameCoachCtrl.text.isNotEmpty &&
                 placeOfWorkouttrl.text.isNotEmpty &&
                 durationCtrl.text.isNotEmpty &&
+                locationCtrl.text.isNotEmpty &&
                 intensity.value != 'Workout intensity' &&
                 type.value != 'Type of Workout') {
               ref.read(addWorkoutProviderProvider.notifier).addWorkout(
@@ -154,15 +167,18 @@ class AddWorkoutPage extends HookConsumerWidget {
                       typeWorkout: type.value,
                       timer: '${gameState.hour}:${gameState.minute} $typeTimer',
                       date: gameState.focusedDay,
-                      city: 'Los Angeles',
+                      city: locationCtrl.text,
                       note: noteCtrl.text,
                     ),
                   );
-            } 
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage(idx: 1,)),
-                (Route<dynamic> route) => false);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(
+                            idx: 1,
+                          )),
+                  (Route<dynamic> route) => false);
+            }
           },
           title: 'Add',
           bgColor: AppColors.blue,

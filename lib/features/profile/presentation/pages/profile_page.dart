@@ -8,9 +8,12 @@ import 'package:t71/core/widgets/app_button.dart';
 import 'package:t71/core/widgets/app_icons.dart';
 import 'package:t71/core/widgets/gl_app_bar.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:t71/features/add_game/presentation/providers/add_game_provider.dart';
 import 'package:t71/features/create_profile/presentation/providers/create_profile_provider.dart';
+import 'package:t71/features/notes_achieves/presentaion/providers/note_provider.dart';
 import 'package:t71/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:t71/features/profile/presentation/pages/support_page.dart';
+import 'package:t71/features/training/presentation/providers/add_workout_provider.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({super.key});
@@ -68,6 +71,9 @@ class ProfilePage extends HookConsumerWidget {
                     AppButton(
                       height: 44,
                       onPressed: () {
+                        ref.read(addGameProviderProvider.notifier).cleareDataState();
+                        ref.read(addWorkoutProviderProvider.notifier).clearDataState();
+                        ref.read(noteProviderProvider.notifier).clearDataState();
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

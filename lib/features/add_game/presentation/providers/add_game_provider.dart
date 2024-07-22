@@ -11,6 +11,8 @@ class AddGameState with _$AddGameState {
   const factory AddGameState({
     @Default([]) List<AddGameModel> addGames,
     @Default([]) List<AddGameModel> historyGames,
+    @Default([]) List<AddGameModel> filteredGames,
+    @Default([]) List<AddGameModel> filteredHistory,
     DateTime? focusedDay,
     @Default(10) int minute,
     @Default(10) int hour,
@@ -34,7 +36,38 @@ class AddGameProvider extends _$AddGameProvider {
 
   void addGame(AddGameModel body) {
     final updateGame = body.copyWith(id: const Uuid().v1());
-    state = state.copyWith(addGames: [updateGame, ...state.addGames]);
+    state = state.copyWith(addGames: [
+      updateGame,
+      ...state.addGames,
+    ]);
+  }
+
+  void filterGames(DateTime date) {
+    final filteredGames = state.addGames.where((game) {
+      return game.date?.year == date.year &&
+          game.date?.month == date.month &&
+          game.date?.day == date.day;
+    }).toList();
+    state = state.copyWith(filteredGames: filteredGames);
+  }
+
+  void filterHistory(DateTime date) {
+    final filteredHistory = state.historyGames.where((game) {
+      return game.date?.year == date.year &&
+          game.date?.month == date.month &&
+          game.date?.day == date.day;
+    }).toList();
+    state = state.copyWith(filteredHistory: filteredHistory);
+  }
+
+  void cleareDataState() {
+    state = state.copyWith(
+      addGames: [],
+      filteredGames: [],
+      filteredHistory: [],
+      historyGames: [],
+      gameCard: null,
+    );
   }
 
   void toggleIsReditGame(AddGameModel body) {
@@ -50,6 +83,10 @@ class AddGameProvider extends _$AddGameProvider {
     );
   }
 
+  void clearFilter() {
+    state = state.copyWith(filteredGames: state.addGames);
+  }
+
   void clearActive() {
     final updateGames = state.addGames.map((item) {
       return item.copyWith(isRedicActive: false);
@@ -60,7 +97,7 @@ class AddGameProvider extends _$AddGameProvider {
     );
   }
 
-  void addHistoryGames (AddGameModel body) {
+  void addHistoryGames(AddGameModel body) {
     final updateHistory = [body, ...state.historyGames];
     state = state.copyWith(historyGames: updateHistory);
   }
@@ -102,7 +139,8 @@ class AddGameProvider extends _$AddGameProvider {
   void onMinute(int min) {
     state = state.copyWith(minute: min);
   }
-  void changeTypeTimer (bool isAm) {
+
+  void changeTypeTimer(bool isAm) {
     state = state.copyWith(typeTimer: isAm ? 'AM' : "PM");
   }
 }
