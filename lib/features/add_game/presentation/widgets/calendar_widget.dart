@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:t71/core/theme/app_colors.dart';
 import 'package:t71/core/theme/app_fonts.dart';
+import 'package:t71/features/add_game/presentation/providers/add_game_provider.dart';
+import 'package:t71/features/add_game/presentation/providers/scroll_offset_provider.dart';
 
 class CalendarWidget extends HookConsumerWidget {
   const CalendarWidget({
@@ -32,16 +34,19 @@ class CalendarWidget extends HookConsumerWidget {
         controller.jumpToDate(focused.value);
       });
     }, [focused.value]);
-
-    void _onMonthChanged(DateTime month) {
-      onMonthChanged(month);
-      focused.value = month;
-    }
-
     void _onDateChange(DateTime selected) {
       onDateChange(selected);
       focused.value = selected;
       onFilterGame?.call(selected);
+    }
+
+    void _onMonthChanged(DateTime month) {
+      onMonthChanged(month);
+      focused.value = month;
+      if (month.year == DateTime.now().year &&
+          month.month == DateTime.now().month) {
+        _onDateChange(DateTime.now());
+      }
     }
 
     return Container(
@@ -107,7 +112,7 @@ class CalendarWidget extends HookConsumerWidget {
   }
 }
 
-class HorizontalMonthPicker extends StatefulWidget {
+class HorizontalMonthPicker extends HookConsumerWidget {
   final Function(DateTime month) onMonthChanged;
 
   const HorizontalMonthPicker({
@@ -116,89 +121,61 @@ class HorizontalMonthPicker extends StatefulWidget {
   });
 
   @override
-  State<HorizontalMonthPicker> createState() => _HorizontalMonthPickerState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scrollOffset = ref.watch(scrollOffsetProvider);
+    final scrollController = useScrollController(initialScrollOffset: scrollOffset);
+    final List<String> months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December',
+    ];
+    final selectedMonthIndex = useState<int>(DateTime.now().month - 1);
 
-class _HorizontalMonthPickerState extends State<HorizontalMonthPicker> {
-  final ScrollController _scrollController = ScrollController();
-  final List<String> months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    "August",
-    "September",
-    'October',
-    'November',
-    'December',
-  ];
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        double itemWidth = 100.0;
+        double screenWidth = MediaQuery.of(context).size.width;
+        if (scrollController.hasClients) {
+          double offset = selectedMonthIndex.value * itemWidth;
+          double centeredOffset = offset - screenWidth / 2 + itemWidth / 2;
+          scrollController.jumpTo(
+            centeredOffset.clamp(0, scrollController.position.maxScrollExtent),
+          );
+        }
+      });
+    }, [selectedMonthIndex.value]);
 
-  int _selectedMonthIndex = DateTime.now().month - 1;
+    useEffect(() {
+      scrollController.addListener(() {
+        ref.read(scrollOffsetProvider.notifier).setOffset(scrollController.offset);
+      });
+      return () => scrollController.removeListener(() {
+        ref.read(scrollOffsetProvider.notifier).setOffset(scrollController.offset);
+      });
+    }, [scrollController]);
 
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      double itemWidth = 100.0;
-      double screenWidth = MediaQuery.of(context).size.width;
-      if (_scrollController.hasClients) {
-        double offset = _selectedMonthIndex * itemWidth;
-        double centeredOffset = offset - screenWidth / 2 + itemWidth / 2;
-        _scrollController.animateTo(
-          centeredOffset.clamp(0, _scrollController.position.maxScrollExtent),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
       child: ListView.builder(
-        controller: _scrollController,
+        controller: scrollController,
         scrollDirection: Axis.horizontal,
         itemCount: months.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              setState(
-                () {
-                  _selectedMonthIndex = index;
-                  widget.onMonthChanged(
-                    DateTime(DateTime.now().year, index + 1),
-                  );
-                },
+              selectedMonthIndex.value = index;
+              onMonthChanged(
+                DateTime(DateTime.now().year, index + 1),
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               height: 24,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: _selectedMonthIndex == index
-                    ? AppColors.blue2
-                    : AppColors.white,
+                color: selectedMonthIndex.value == index ? AppColors.blue2 : AppColors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 10,
-              ),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Text(
                 months[index],
                 style: AppFonts.w400f13,

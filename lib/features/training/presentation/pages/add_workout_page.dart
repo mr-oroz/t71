@@ -26,11 +26,13 @@ class AddWorkoutPage extends HookConsumerWidget {
     final formKey = GlobalKey<FormState>();
     final placeOfWorkouttrl = useTextEditingController();
     final locationCtrl = useTextEditingController();
-
     final nameCoachCtrl = useTextEditingController();
     final durationCtrl = useTextEditingController();
     final noteCtrl = useTextEditingController();
     final type = useState<String>('Type of Workout');
+    final selectedIdxType = useState<int>(1);
+    final selectedIdxIntencity = useState<int>(1);
+
     final selectedType = useState<List<String>>([
       'Strike technique',
       'Physical training',
@@ -50,6 +52,14 @@ class AddWorkoutPage extends HookConsumerWidget {
         noteCtrl.text = item!.note ?? '';
       }
     }, [item]);
+
+    void onSelectedIdxIntensity(int value) {
+      selectedIdxIntencity.value = value;
+    }
+
+    void onSelectedIdxType(int value) {
+      selectedIdxType.value = value;
+    }
 
     void onSelectType(String value) {
       type.value = value;
@@ -119,18 +129,21 @@ class AddWorkoutPage extends HookConsumerWidget {
               ),
               const Gap(15),
               CustomTextField(
-                
                 controller: locationCtrl,
                 hintText: 'Location',
               ),
               const Gap(15),
               CustomDropDown(
+                onSelectedIdx: onSelectedIdxType,
+                selectedIdx: selectedIdxType.value,
                 onSelect: onSelectType,
                 list: selectedType.value,
                 title: type.value,
               ),
               const Gap(15),
               CustomDropDown(
+                onSelectedIdx: onSelectedIdxIntensity,
+                selectedIdx: selectedIdxIntencity.value,
                 onSelect: onSelectIntensity,
                 list: selectIntensity.value,
                 title: intensity.value,

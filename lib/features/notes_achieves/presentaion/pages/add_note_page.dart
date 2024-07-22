@@ -30,7 +30,7 @@ class AddNotePage extends HookConsumerWidget {
     }
 
     ref.listen<NodeState>(noteProviderProvider, (prev, next) {
-      if (next.notes.isNotEmpty) {
+      if (next.notes.length != prev!.notes.length) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

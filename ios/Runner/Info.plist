@@ -41,6 +41,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>This app needs access to location when open.</string>
+  <key>NSUserNotificationUsageDescription</key>
+  <string>We would like to send you notifications</string>
   <key>NSPhotoLibraryUsageDescription</key>
   <string>Explanation why app needs access to the gallery</string>
   <key>NSCameraUsageDescription</key>

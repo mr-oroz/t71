@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:t71/core/theme/app_colors.dart';
 import 'package:t71/core/theme/app_fonts.dart';
 import 'package:t71/core/widgets/app_button.dart';
@@ -15,12 +19,19 @@ import 'package:t71/features/onboarding/presentation/pages/onboarding_page.dart'
 import 'package:t71/features/profile/presentation/pages/support_page.dart';
 import 'package:t71/features/training/presentation/providers/add_workout_provider.dart';
 
+final sharedPreferencesProvider =
+    FutureProvider<SharedPreferences>((ref) async {
+  return await SharedPreferences.getInstance();
+});
+
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(createProfileProvider).user;
+    final isActive = useState<bool>(false);
+
     Color getColorType(String title) {
       if (title == 'Intermediate') {
         return AppColors.blue;
@@ -29,70 +40,6 @@ class ProfilePage extends HookConsumerWidget {
       } else {
         return AppColors.yellow;
       }
-    }
-
-    void _showModalDeleteConfirm(BuildContext context) {
-      showDialog(
-        context: context,
-        barrierColor: AppColors.blue2.withOpacity(0.3),
-        useRootNavigator: true,
-        builder: (
-          context,
-        ) {
-          return Dialog(
-            backgroundColor: AppColors.white,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width * 0.5,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: AppIcon(AppIcons.close),
-                        )
-                      ],
-                    ),
-                    Gap(10),
-                    Text(
-                      'Your request has been accepted! We will contact you within 24 hours',
-                      textAlign: TextAlign.center,
-                      style: AppFonts.w500f20,
-                    ),
-                    Gap(10),
-                    AppButton(
-                      height: 44,
-                      onPressed: () {
-                        ref.read(addGameProviderProvider.notifier).cleareDataState();
-                        ref.read(addWorkoutProviderProvider.notifier).clearDataState();
-                        ref.read(noteProviderProvider.notifier).clearDataState();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OnboardingPage(),
-                          ),
-                          ((Route<dynamic> route) => false),
-                        );
-                      },
-                      title: 'Ok',
-                      bgColor: AppColors.blue,
-                      textColor: AppColors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
     }
 
     void _showModalDeleteAccount(BuildContext context) {
@@ -140,7 +87,7 @@ class ProfilePage extends HookConsumerWidget {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            title: 'Cansel',
+                            title: 'Canсel',
                             bgColor: AppColors.blue,
                             textColor: AppColors.white,
                           ),
@@ -153,8 +100,22 @@ class ProfilePage extends HookConsumerWidget {
                               ref
                                   .read(createProfileProvider.notifier)
                                   .deleteUser();
-                              Navigator.pop(context);
-                              _showModalDeleteConfirm(context);
+                              ref
+                                  .read(addGameProviderProvider.notifier)
+                                  .cleareDataState();
+                              ref
+                                  .read(addWorkoutProviderProvider.notifier)
+                                  .clearDataState();
+                              ref
+                                  .read(noteProviderProvider.notifier)
+                                  .clearDataState();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OnboardingPage(),
+                                ),
+                                ((Route<dynamic> route) => false),
+                              );
                             },
                             title: 'Delete',
                             bgColor: AppColors.white,
@@ -172,7 +133,39 @@ class ProfilePage extends HookConsumerWidget {
       );
     }
 
-    final isActive = useState<bool>(true);
+    void rateApp() async {
+      final InAppReview inAppReview = InAppReview.instance;
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+      }
+    }
+
+    void showNotificationAction(bool value) async {
+      final prefs = await ref.read(sharedPreferencesProvider.future);
+      prefs.setBool("showNotification", value);
+      isActive.value = value;
+
+      if (value) {
+        final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+            FlutterLocalNotificationsPlugin();
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                IOSFlutterLocalNotificationsPlugin>()
+            ?.requestPermissions(
+              alert: true,
+              badge: true,
+              sound: true,
+            );
+      }
+    }
+
+    useEffect(() {
+      ref.read(sharedPreferencesProvider.future).then((prefs) {
+        isActive.value = prefs.getBool('showNotification') ?? false;
+      });
+      return null;
+    }, const []);
+
     return Scaffold(
       appBar: GlAppBar(
         title: Row(
@@ -315,60 +308,92 @@ class ProfilePage extends HookConsumerWidget {
                           toggleSize: 26.0,
                           value: isActive.value,
                           borderRadius: 30.0,
-                          onToggle: (val) {
-                            isActive.value = val;
+                          onToggle: (val) async {
+                            showNotificationAction(val);
                           },
                         ),
                       ],
                     ),
                     Gap(20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Rate us', style: AppFonts.w400f16),
-                        GestureDetector(
-                          onTap: () {},
-                          child: AppIcon(AppIcons.right),
-                        )
-                      ],
-                    ),
-                    Gap(20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Support', style: AppFonts.w400f16),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SupportPage(),
-                              ),
-                            );
-                          },
-                          child: AppIcon(AppIcons.right),
-                        )
-                      ],
-                    ),
-                    Gap(20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Delete account',
-                          style:
-                              AppFonts.w400f16.copyWith(color: AppColors.red),
+                    GestureDetector(
+                      onTap: rateApp,
+                      child: SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Rate us', style: AppFonts.w400f16),
+                            AppIcon(AppIcons.right)
+                          ],
                         ),
-                        GestureDetector(
-                          onTap: () => _showModalDeleteAccount(context),
-                          child: AppIcon(AppIcons.right, color: AppColors.red),
-                        )
-                      ],
+                      ),
+                    ),
+                    Gap(20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SupportPage(),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Support', style: AppFonts.w400f16),
+                          AppIcon(AppIcons.right)
+                        ],
+                      ),
+                    ),
+                    Gap(20),
+                    GestureDetector(
+                      onTap: () => _showModalDeleteAccount(context),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Delete account',
+                            style:
+                                AppFonts.w400f16.copyWith(color: AppColors.red),
+                          ),
+                          AppIcon(AppIcons.right, color: AppColors.red)
+                        ],
+                      ),
                     ),
                   ],
                 ),
               )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget makeSettingsStat(
+    String title,
+    Color background,
+    Color textColor,
+    Widget? content,
+    VoidCallback onTap,
+  ) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20),
+      child: GestureDetector(
+        onTap: onTap,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(34),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                content ?? const SizedBox(),
+              ],
+            ),
           ),
         ),
       ),

@@ -14,7 +14,6 @@ class NotesAchievesPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTabController(initialLength: 2);
-    //final state = ref.watch()
     return Scaffold(
       appBar: HoteAchievesAppBar(controller: controller),
       body: SafeArea(
@@ -28,7 +27,10 @@ class NotesAchievesPage extends HookConsumerWidget {
                 child: TabBarView(
                   controller: controller,
                   children: const [
-                    NoteTabPage(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: NoteTabPage(),
+                    ),
                     AchievesTabPage()
                   ],
                 ),

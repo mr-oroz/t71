@@ -12,13 +12,18 @@ class CustomDropDown extends HookConsumerWidget {
     required this.list,
     required this.title,
     required this.onSelect,
+    required this.selectedIdx,
+    required this.onSelectedIdx,
   });
   final String title;
   final List<String> list;
+  final int selectedIdx;
   final Function(String value) onSelect;
+  final Function(int value) onSelectedIdx;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState<int>(1);
+    final selectedIndex = useState<int>(selectedIdx);
     final selectedTitle = useState<String>(title);
     final selectedList = useState<List<String>>(list);
     final isFound = useState<bool>(false);
@@ -46,8 +51,8 @@ class CustomDropDown extends HookConsumerWidget {
                     color: AppColors.text2,
                   ),
                 ),
-                const AppIcon(
-                  AppIcons.up,
+                AppIcon(
+                  isFound.value ? AppIcons.down : AppIcons.up,
                   color: AppColors.text2,
                 )
               ],
@@ -76,6 +81,7 @@ class CustomDropDown extends HookConsumerWidget {
                       selectedTitle.value = selectedList.value[index];
                       onSelect(selectedList.value[index]);
                       isFound.value = false;
+                      onSelectedIdx(index);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

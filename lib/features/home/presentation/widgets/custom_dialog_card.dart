@@ -120,6 +120,7 @@ class CustomDialogCard extends HookConsumerWidget {
                   ref
                       .read(addGameProviderProvider.notifier)
                       .filterHistory(item.date!);
+                  ref.read(addGameProviderProvider.notifier).deleteGame(item.id!);
                   Navigator.of(context).pop();
                 },
                 title: 'Done',
@@ -130,7 +131,6 @@ class CustomDialogCard extends HookConsumerWidget {
               Gap(15),
               AppButton(
                 onPressed: () {
-                  print('Button clicked');
                   Navigator.of(context).pop();
                 },
                 title: 'Skip',
@@ -203,6 +203,15 @@ class CustomDialogCard extends HookConsumerWidget {
               ),
             ),
             const Gap(10),
+            Flexible(
+              child: Text(
+                item.note ?? '',
+                style: AppFonts.w400f16.copyWith(
+                  color: AppColors.text2,
+                ),
+              ),
+            ),
+            const Gap(10),
             Row(
               children: [
                 AppIcon(
@@ -226,7 +235,7 @@ class CustomDialogCard extends HookConsumerWidget {
                 ),
                 const Gap(5),
                 Text(
-                  'New Zeland',
+                  item.city ?? '',
                   style: AppFonts.w400f13.copyWith(
                     color: AppColors.text2,
                   ),

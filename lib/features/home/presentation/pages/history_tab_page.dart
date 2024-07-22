@@ -64,12 +64,12 @@ class HistoryTabPage extends HookConsumerWidget {
             ),
           )
         else
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Center(
               child: Text(
                 'No history at the moment',
-                style: AppFonts.w500f20.copyWith(
+                style: AppFonts.w400f20.copyWith(
                   color: AppColors.text2,
                 ),
               ),

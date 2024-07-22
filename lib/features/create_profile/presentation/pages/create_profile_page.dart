@@ -26,6 +26,8 @@ class CreateProfilePage extends HookConsumerWidget {
     final ageCtrl = useTextEditingController();
     final favoriteCtrl = useTextEditingController();
     final gameLevel = useState<String>('Game Level');
+    final selectedIndex = useState<int>(1);
+
     final selected = useState<List<String>>([
       'Beginner',
       'Intermediate',
@@ -39,6 +41,10 @@ class CreateProfilePage extends HookConsumerWidget {
 
     void onSelect(String value) {
       gameLevel.value = value;
+    }
+
+    void onSelectedIdx (int value) {
+      selectedIndex.value = value;
     }
 
     void _clearControllers() {
@@ -62,6 +68,7 @@ class CreateProfilePage extends HookConsumerWidget {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: GlAppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +91,7 @@ class CreateProfilePage extends HookConsumerWidget {
           padding: const EdgeInsets.all(15),
           child: Form(
             key: formKey,
-            child: Column(
+            child: ListView(
               children: [
                 CustomTextField(
                   controller: nameCtrl,
@@ -144,6 +151,8 @@ class CreateProfilePage extends HookConsumerWidget {
                 ),
                 const Gap(15),
                 CustomDropDown(
+                  onSelectedIdx: onSelectedIdx,
+                  selectedIdx: selectedIndex.value,
                   onSelect: onSelect,
                   list: selected.value,
                   title: gameLevel.value,

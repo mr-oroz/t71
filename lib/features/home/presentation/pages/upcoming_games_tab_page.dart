@@ -28,7 +28,6 @@ class UpcomingGamesTabPage extends HookConsumerWidget {
       ref.read(addGameProviderProvider.notifier).filterGames(selected);
     }
 
-
     void onMonthChanged(DateTime month) {
       focusedDay.value = DateTime(month.year, month.month, 1);
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,7 +37,6 @@ class UpcomingGamesTabPage extends HookConsumerWidget {
       onFilterGame(month);
     }
 
-    
     void onDateChange(DateTime selected) {
       focusedDay.value = selected;
       ref.read(addGameProviderProvider.notifier).onDateChange(selected);
@@ -72,12 +70,12 @@ class UpcomingGamesTabPage extends HookConsumerWidget {
             ),
           )
         else
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Center(
               child: Text(
                 'No notes',
-                style: AppFonts.w500f20.copyWith(
+                style: AppFonts.w400f20.copyWith(
                   color: AppColors.text2,
                 ),
               ),

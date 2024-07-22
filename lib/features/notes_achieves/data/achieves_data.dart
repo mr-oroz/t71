@@ -8,7 +8,7 @@ final List<AchievesModel> list = [
   AchievesModel(
       title: 'Complete a match without getting knocked down',
       subTitle: 'Fight an entire match without being knocked down.',
-      isActive: true),
+      isActive: false),
   AchievesModel(
       title: 'Improve jab technique',
       subTitle: 'Significantly improve your jabtechnique after training',
@@ -16,7 +16,7 @@ final List<AchievesModel> list = [
   AchievesModel(
       title: 'Land 50 punches in one match',
       subTitle: 'Successfully land 50 punches in a single match',
-      isActive: true),
+      isActive: false),
   AchievesModel(
       title: 'Defeat a higher-ranked opponent',
       subTitle: 'Defeat an opponent who is ranked higher than you',

@@ -8,6 +8,7 @@ import 'package:t71/core/widgets/app_button.dart';
 import 'package:t71/core/widgets/app_icons.dart';
 import 'package:t71/core/widgets/gl_app_bar.dart';
 import 'package:t71/features/create_profile/presentation/widgets/custom_text_field.dart';
+import 'package:t71/features/main/main_page.dart';
 
 class SupportPage extends HookConsumerWidget {
   const SupportPage({super.key});
@@ -15,6 +16,67 @@ class SupportPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final noteCtrl = useTextEditingController();
+
+    void _showModalDeleteConfirm(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierColor: AppColors.blue2.withOpacity(0.3),
+        useRootNavigator: true,
+        builder: (
+          context,
+        ) {
+          return Dialog(
+            backgroundColor: AppColors.white,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width * 0.5,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: AppIcon(AppIcons.close),
+                        )
+                      ],
+                    ),
+                    Gap(10),
+                    Text(
+                      'Your request has been accepted! We will contact you within 24 hours',
+                      textAlign: TextAlign.center,
+                      style: AppFonts.w500f20,
+                    ),
+                    Gap(10),
+                    AppButton(
+                      height: 44,
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainPage(idx: 3),
+                                ),
+                                ((Route<dynamic> route) => false),
+                              );
+                      },
+                      title: 'Ok',
+                      bgColor: AppColors.blue,
+                      textColor: AppColors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: GlAppBar(
@@ -56,7 +118,9 @@ class SupportPage extends HookConsumerWidget {
               Spacer(),
               AppButton(
                 height: 56,
-                onPressed: () {},
+                onPressed: () {
+                  _showModalDeleteConfirm(context);
+                },
                 title: 'Send',
                 bgColor: AppColors.blue,
                 textColor: AppColors.white,
